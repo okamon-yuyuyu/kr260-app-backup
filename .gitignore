@@ -1,0 +1,50 @@
+# 原則、すべて無視
+*
+
+# フォルダは探索できるようにする
+!*/
+
+# C / C++
+!*.c
+!*.cc
+!*.cpp
+!*.cxx
+!*.h
+!*.hh
+!*.hpp
+!*.hxx
+
+# Make / CMake
+!Makefile
+!makefile
+!GNUmakefile
+!*.mk
+!CMakeLists.txt
+!*.cmake
+
+# Python・シェルスクリプト
+!*.py
+!*.sh
+
+# FPGA・Vivado関連のソース
+!*.v
+!*.sv
+!*.vhd
+!*.vhdl
+!*.xdc
+!*.tcl
+
+# リンカ・アセンブリ
+!*.ld
+!*.s
+!*.S
+
+# 説明ファイル
+!README
+!README.*
+!*.md
+!LICENSE
+!LICENSE.*
+
+# この設定ファイル自体
+!.gitignore

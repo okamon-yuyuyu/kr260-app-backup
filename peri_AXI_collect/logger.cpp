@@ -5,12 +5,15 @@
 #include <sstream>
 #include <stdexcept>
 
-Logger::Logger(const std::string& csv_path) : ofs_(csv_path) {
+Logger::Logger(const std::string& csv_path,
+               std::optional<double> start_battery_voltage_v)
+    : ofs_(csv_path),
+      start_battery_voltage_v_(start_battery_voltage_v) {
     if (!ofs_) {
         throw std::runtime_error("failed to open log file: " + csv_path);
     }
 
-    ofs_ << "index,timestamp,mode,event,id,command_name,image_path,"
+    ofs_ << "index,timestamp,mode,start_battery_voltage_v,event,id,command_name,image_path,"
          << "aruco_detected,aruco_id,aruco_x_mm,aruco_y_mm,aruco_z_mm,aruco_angle_deg,"
          << "rom0,rom1,rom2,rom3,"
          << "stroke_right,stroke_left,stroke_up,stroke_down,"
@@ -58,7 +61,13 @@ void Logger::write_common(int index,
                           const ArucoResult& aruco) {
     ofs_ << index << ','
          << timestamp << ','
-         << mode << ','
+         << mode << ',';
+
+    if (start_battery_voltage_v_) {
+        ofs_ << *start_battery_voltage_v_;
+    }
+
+    ofs_ << ','
          << event << ','
          << cmd.id << ','
          << cmd.name << ','

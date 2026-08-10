@@ -6,11 +6,14 @@
 #include "encoder.hpp"
 
 #include <fstream>
+#include <optional>
 #include <string>
 
 class Logger {
 public:
-    explicit Logger(const std::string& csv_path);
+    explicit Logger(
+        const std::string& csv_path,
+        std::optional<double> start_battery_voltage_v = std::nullopt);
 
     void log_action(int index,
                     const std::string& timestamp,
@@ -33,6 +36,7 @@ public:
 
 private:
     std::ofstream ofs_;
+    std::optional<double> start_battery_voltage_v_;
 
     void write_common(int index,
                       const std::string& timestamp,

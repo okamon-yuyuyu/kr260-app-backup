@@ -10,6 +10,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -160,10 +162,25 @@ int main() {
 
     std::string auto_command_path;
     std::vector<std::string> auto_commands;
+    std::optional<double> start_battery_voltage_v;
 
     if (mode == "auto") {
         std::cout << "Command txt path: ";
         std::cin >> auto_command_path;
+
+        double voltage = 0.0;
+        while (true) {
+            std::cout << "Battery voltage at start [V]: ";
+
+            if (std::cin >> voltage && voltage > 0.0) {
+                start_battery_voltage_v = voltage;
+                break;
+            }
+
+            std::cout << "Enter a positive number (example: 12.3).\n";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
     }
 
     const std::string run_name = experiment_name + "_" + mode + "_" + now_string();
@@ -186,7 +203,7 @@ int main() {
         EncoderReader encoder;
         CameraCapture camera;
         ArucoDetector aruco;
-        Logger logger(csv_path);
+        Logger logger(csv_path, start_battery_voltage_v);
         std::ofstream command_log(command_log_path);
 
         if (!command_log) {

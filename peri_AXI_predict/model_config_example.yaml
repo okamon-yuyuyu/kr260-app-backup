@@ -1,0 +1,11 @@
+%YAML:1.0
+---
+model_type: "CNN_v2_GRAY"
+image_height: 320
+image_width: 180
+image_mode: "GRAY"
+input_channels: 1
+mean: [ 0.0 ]
+std: [ 1.0 ]
+commands: [ 3, 4, 5, 6, 7, 100, 900 ]
+min_confidence: 0.500000

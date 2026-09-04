@@ -22,13 +22,13 @@ int main(void)
     // set parameters
     uint16_t rom0 = 0;
     uint16_t rom1 = 0;
-    uint16_t rom2 = 1200;
-    uint16_t rom3 = 1200;
+    uint16_t rom2 = 1000;
+    uint16_t rom3 = 1000;
 
     uint16_t stroke_up    = 0;
     uint16_t stroke_down  = 0;
-    uint16_t stroke_right = 1500;
-    uint16_t stroke_left  = 1500;
+    uint16_t stroke_right = 2000;
+    uint16_t stroke_left  = 2000;
 
 
     static uint32_t toggle = 0;

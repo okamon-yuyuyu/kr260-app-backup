@@ -45,7 +45,8 @@ struct Config {
     int settle_ms=50,poll_ms=2,rom=100,stroke=2000,step_timeout_ms=2000,done_timeout_ms=10000;
     int feedback_port=5001;
     int jpeg_queue=3;
-    std::array<std::uint16_t,4> wire_target{{725,3453,2400,267}};
+    std::array<std::uint16_t,4> wire_target{{725,3453,1650,543}};
+    // std::array<std::uint16_t,4> wire_target{{725,3453,2400,267}}; default
     int deadband_manual=5,deadband_auto=20;
     double battery_voltage_v=0.0;
     std::string yaml="/home/ubuntu/yaml/camera_many.yaml";
@@ -877,6 +878,27 @@ int main(int argc,char** argv){
                 if(!g_stop)hw.cleanup_to_axi();
             }else{
                 std::cerr<<"PWM/GATE LEFT ENABLED. Cut motor power before manual recovery.\n";
+            }
+        }else if(cfg.mode=="axi" && !result.goal && result.events>0 && !g_stop){
+            std::cout<<"AXI collection ended without GOAL.\n"
+                     <<"Confirm RIGHT stick is NEUTRAL and the robot is stopped before reset.\n";
+            if(ask_yes_no("RIGHT stick neutral, robot stopped, and safe to reset posture to q=50?")){
+                if(!g_stop){
+                    const bool reset_ok =
+                        reset_posture_50(hw,cfg,log,encoder,result.events+1);
+                    if(!reset_ok)result.ok=false;
+                }
+            }else{
+                LogEvent skip;
+                skip.no=result.events+1;
+                skip.timestamp=wall_timestamp();
+                skip.enc=encoder.sample();
+                skip.mode="AXI";
+                skip.kind="RESET";
+                skip.q=50;
+                skip.quality="RESET_SKIPPED_BY_USER";
+                log.write(skip);
+                std::cout<<"Posture reset SKIPPED.\n";
             }
         }
         std::cout<<"Collection ended in "<<cfg.mode<<" mode. Ctrl+C is not a motor stop.\n";
